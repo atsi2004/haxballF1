@@ -20994,6 +20994,8 @@ room.onGamePaused = function(byPlayer){
 var gridSwitch = false;
 room.onGameStart = function(byPlayer){
 
+	
+
 	if(gridSwitch == false){
 		room.stopGame();
 		room.startGame();
