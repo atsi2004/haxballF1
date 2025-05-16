@@ -20993,28 +20993,34 @@ room.onGamePaused = function(byPlayer){
 
 var gridSwitch = false;
 room.onGameStart = function(byPlayer){
-	room.getPlayerList().forEach(p => {
-    if (afkPlayers.includes(p.id)) {
-      room.setPlayerTeam(p.id, 0);
-    }
-  });
+
 	if(gridSwitch == false){
 		room.stopGame();
 		room.startGame();
 		gridSwitch = true;
 	}
-    byPlayer == null ? console.log(`Game started`) : console.log(`Game started by ${byPlayer.name}`);
-	// Reset session best lap
+	console.log(byPlayer
+    ? `Game started by ${byPlayer.name}`
+    : `Game started`);
+
 	_Circuit.SessionBest = [999.99,undefined];
-    var players = room.getPlayerList();
-    players.forEach(p => {
-	room.setPlayerTeam(p.id,_Circuit.Team);
+	
+	room.getPlayerList().forEach(p => {
+    // AFK players stay spectating
+    if (afkPlayers.includes(p.id)) {
+      room.setPlayerTeam(p.id, 0);
+    }
+    else {
+      room.setPlayerTeam(p.id, _Circuit.Team);
+    }
+
+	// Resetting lap data
 	playerList[p.name].currentLap = 0;
 	playerList[p.name].lapChanged = false;
 	for(var l=0; l<playerList[p.name].lapTimes.length; l++){
 	    playerList[p.name].lapTimes[l] = 0;
 	}
-    });
+	});
 
 }
 
